@@ -60,6 +60,12 @@
 </head>
 <body>
 
+    <div id="speed-controls" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 100;">
+        <button onclick="changeSpeed(-0.2)" style="font-size: 24px; cursor: pointer; background: rgba(241, 211, 142, 0.2); color: #f1d38e; border: 2px solid #f1d38e; border-radius: 10px; padding: 10px;">▲ Faster</button>
+        <div style="text-align: center; font-family: Garamond, serif; font-weight: bold;">SPEED</div>
+        <button onclick="changeSpeed(0.2)" style="font-size: 24px; cursor: pointer; background: rgba(241, 211, 142, 0.2); color: #f1d38e; border: 2px solid #f1d38e; border-radius: 10px; padding: 10px;">▼ Slower</button>
+    </div>
+    
     <div id="special-snitch">
         <div class="congrats-bubble">NEW HIGH SCORE!<br>Amazing job, Scarlett! ✨</div>
         <svg width="60" height="60" viewBox="0 0 24 24" fill="#ffd700"><path d="M12,2L10,5L12,8L14,5L12,2M12,10C8.69,10 6,12.69 6,16C6,19.31 8.69,22 12,22C15.31,22 18,19.31 18,16C18,12.69 15.31,10 12,10M12,20C9.79,20 8,18.21 8,16C8,13.79 9.79,12 12,12C14.21,12 16,13.79 16,16C16,18.21 14.21,20 12,20M2,16C2,14 4,12 4,12C4,12 4,16 2,16M22,16C22,14 20,12 20,12C20,12 20,16 22,16Z"/></svg>
@@ -137,7 +143,8 @@
             }
         hiddenInput.focus();
         });
-    // --- IPAD KEYBOARD FIX END ---
+        // --- IPAD KEYBOARD FIX END ---
+        
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const seeds = ["WAND", "ROBE", "OWL", "HAT", "INK", "FLY", "CAT", "RAT", "CUP", "BOY", "MAP", "KEY", "BED", "TEA", "SUN", "BAG", "BOOK", "TOAD", "GOLD", "GATE", "FIRE", "WALL", "CAKE", "WIND", "BIRD", "SNOW", "SHIP", "MILK", "JUMP", "DARK", "FAST", "LOCK", "DOOR", "WOOD", "TREE", "SOUP", "COIN", "DUST", "DESK", "FROG", "MAGIC", "CLOAK", "TRAIN", "GHOST", "SPELL", "BRICK", "STONE", "BROOM", "STAIR", "PIZZA", "STARS", "NIGHT", "LIGHT", "GLOVE", "SNAKE", "MOUSE", "VAULT", "SCARF", "POTION", "WIZARD", "CASTLE", "DRAGON", "GOBLIN", "MIRROR", "SCHOOL", "FLOWER", "GIANTS", "DIARY", "SPIDER", "FOREST", "KNIGHT", "SILVER", "PURPLE", "SHIELD", "SPIRIT", "ARMOR", "GARDEN", "KITCHEN", "PUMPKIN", "BROOMS", "CAULDRON", "FEATHER", "LIBRARY", "WHISPER", "PHANTOM", "ALCHEMY", "CRYSTAL", "LANTERN", "SHADOW", "TOWER", "BRIDGE", "SCROLL", "BEAST", "TICKET", "CANDLE", "REMEDY", "BREW", "ELIXIR", "TALENT", "QUEST", "AMULET", "CHARM", "JINX", "HEX", "RUNE", "SIGHT", "DREAM", "FLAME", "FROST", "STORM", "CLOUD", "POWER", "CROWN", "SCEPTRE", "VALLEY", "MOUNTAIN", "ISLAND", "OCEAN", "DESERT", "JUNGLE", "CAVERN", "TUNNEL", "TEMPLE", "STATUE", "PILLAR", "THRONE", "CHAMBER", "PASSAGE", "SECRET", "RIDDLE", "PUZZLE", "SYMBOL", "LEGEND", "FABLE", "STORY", "MYTH", "REWARD", "TROPHY", "MEDAL", "BADGE", "TOKEN", "JEWEL", "DIAMOND", "RUBY", "PEARL", "EMERALD", "SAPPHIRE", "BOTTLE", "CHEST", "BASKET", "HAMMER", "CHISEL", "NEEDLE", "THREAD", "FABRIC", "LEATHER", "CANVAS", "GRIFFIN", "PHOENIX", "UNICORN", "DRAGON", "CENTAUR", "MERMAID", "PIXIE", "FAIRY", "GNOME", "TROLL", "GIANT", "GOLEM", "SPIRIT", "WRAITH", "BANSHEE", "SPECTRE", "KEEPER", "MASTER", "ELDER", "LEADER", "FRIEND", "COUSIN", "FAMILY", "SISTER", "BROTHER", "FATHER", "MOTHER"].map(w => w.toUpperCase());
@@ -173,6 +180,15 @@
             startGame(true);
         }
 
+        function changeSpeed(delta) {
+            fallSpeed -= delta; 
+            if (fallSpeed < 0.5) fallSpeed = 0.5;
+            if (fallSpeed > 10) fallSpeed = 10;
+        
+            // ADD THIS LINE: It puts the "focus" back on the game so she can keep typing immediately
+            window.focus(); 
+        }
+        
         function togglePause() {
             if (!active || reporting) return;
             paused = !paused;
