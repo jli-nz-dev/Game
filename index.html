@@ -18,6 +18,11 @@
         .snitch.active { fill: #ffd700; filter: drop-shadow(0 0 5px #ffd700) grayscale(0); transform: scale(1.2); }
         #lives-display { color: #ff4d4d; font-size: 20px; letter-spacing: 2px; margin-top: 5px; }
 
+        /* Speed Control Styling */
+        #speed-controls { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 100; align-items: center; }
+        .speed-btn { padding: 10px; font-size: 20px; background: rgba(116, 27, 27, 0.6); color: var(--wizard-gold); border: 2px solid var(--wizard-gold); border-radius: 8px; cursor: pointer; width: 50px; }
+        #speed-val-display { font-weight: bold; font-size: 14px; text-shadow: 0 0 5px black; }
+
         /* High Score Snitch Animation */
         #special-snitch {
             position: absolute; display: none; z-index: 50; pointer-events: none;
@@ -60,15 +65,29 @@
 </head>
 <body>
 
-    <div id="speed-controls" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 100;">
-        <button onclick="changeSpeed(-0.2)" style="font-size: 24px; cursor: pointer; background: rgba(241, 211, 142, 0.2); color: #f1d38e; border: 2px solid #f1d38e; border-radius: 10px; padding: 10px;">▲ Faster</button>
-        <div style="text-align: center; font-family: Garamond, serif; font-weight: bold;">SPEED</div>
-        <button onclick="changeSpeed(0.2)" style="font-size: 24px; cursor: pointer; background: rgba(241, 211, 142, 0.2); color: #f1d38e; border: 2px solid #f1d38e; border-radius: 10px; padding: 10px;">▼ Slower</button>
-    </div>
-    
-    <div id="special-snitch">
-        <div class="congrats-bubble">NEW HIGH SCORE!<br>Amazing job, Scarlett! ✨</div>
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="#ffd700"><path d="M12,2L10,5L12,8L14,5L12,2M12,10C8.69,10 6,12.69 6,16C6,19.31 8.69,22 12,22C15.31,22 18,19.31 18,16C18,12.69 15.31,10 12,10M12,20C9.79,20 8,18.21 8,16C8,13.79 9.79,12 12,12C14.21,12 16,13.79 16,16C16,18.21 14.21,20 12,20M2,16C2,14 4,12 4,12C4,12 4,16 2,16M22,16C22,14 20,12 20,12C20,12 20,16 22,16Z"/></svg>
+    <div id="game-container">
+        <div id="ui-layer">
+            <div>YEAR: <span id="lvl-val">1</span><div id="lives-display"></div></div>
+            <div id="progress-center">
+                <div style="font-size: 10px;">GOLDEN SNITCHES</div>
+                <div id="snitch-grid"></div>
+            </div>
+            <div>POINTS: <span id="score-val">0</span></div>
+        </div>
+
+        <div id="speed-controls">
+            <button class="speed-btn" onclick="changeSpeed(0.2)">▲</button>
+            <div id="speed-val-display">SPEED: 1.0x</div>
+            <button class="speed-btn" onclick="changeSpeed(-0.2)">▼</button>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+        <div id="input-display">READY</div>
+
+        <div id="special-snitch">
+            <div class="congrats-bubble">NEW HIGH SCORE!<br>Amazing job, Scarlett! ✨</div>
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="#ffd700"><path d="M12,2L10,5L12,8L14,5L12,2M12,10C8.69,10 6,12.69 6,16C6,19.31 8.69,22 12,22C15.31,22 18,19.31 18,16C18,12.69 15.31,10 12,10M12,20C9.79,20 8,18.21 8,16C8,13.79 9.79,12 12,12C14.21,12 16,13.79 16,16C16,18.21 14.21,20 12,20M2,16C2,14 4,12 4,12C4,12 4,16 2,16M22,16C22,14 20,12 20,12C20,12 20,16 22,16Z"/></svg>
+        </div>
     </div>
 
     <div id="start-screen" class="overlay">
@@ -104,19 +123,6 @@
         </div>
     </div>
 
-    <div id="game-container">
-        <div id="ui-layer">
-            <div>YEAR: <span id="lvl-val">1</span><div id="lives-display"></div></div>
-            <div id="progress-center">
-                <div style="font-size: 10px;">GOLDEN SNITCHES</div>
-                <div id="snitch-grid"></div>
-            </div>
-            <div>POINTS: <span id="score-val">0</span></div>
-        </div>
-        <canvas id="gameCanvas"></canvas>
-        <div id="input-display">READY</div>
-    </div>
-
     <div id="keyboard-section">
         <div class="key-row" id="r1"></div>
         <div class="key-row" id="r2"></div>
@@ -129,7 +135,7 @@
     </template>
 
     <script>
-        // --- IPAD KEYBOARD FIX START ---
+        // --- IPAD KEYBOARD FIX ---
         document.addEventListener('touchstart', function() {
             window.focus();
             let hiddenInput = document.getElementById('kb-fix');
@@ -141,9 +147,8 @@
                 hiddenInput.style.opacity = '0';
                 document.body.appendChild(hiddenInput);
             }
-        hiddenInput.focus();
+            hiddenInput.focus();
         });
-        // --- IPAD KEYBOARD FIX END ---
         
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -163,7 +168,24 @@
         const snitchTemplate = document.getElementById('snitch-svg');
         for(let i=0; i<20; i++) snitchGrid.appendChild(snitchTemplate.content.cloneNode(true));
 
+        // GLOBAL STATE
         let activeWords = [], score = 0, level = 1, typed = 0, lives = 5, active = false, reporting = false, paused = false, playerName = "Scarlett", inputStr = "", lastS = 0, targetedWord = null;
+        let fallSpeedMult = 1.0; // THE MASTER SPEED MULTIPLIER
+
+        function changeSpeed(delta) {
+            fallSpeedMult += delta;
+            // Bound it between 0.4 and 3.0
+            if (fallSpeedMult < 0.4) fallSpeedMult = 0.4;
+            if (fallSpeedMult > 3.0) fallSpeedMult = 3.0;
+            
+            // Update the meter
+            document.getElementById('speed-val-display').innerText = `SPEED: ${fallSpeedMult.toFixed(1)}x`;
+            
+            // For already falling words, update their internal speed immediately
+            activeWords.forEach(w => w.updateSpeed());
+            
+            window.focus();
+        }
 
         function saveCurrentGame() {
             const gameState = { score, level, lives, playerName, mode: document.querySelector('input[name="lives-mode"]:checked').value };
@@ -180,15 +202,6 @@
             startGame(true);
         }
 
-        function changeSpeed(delta) {
-            fallSpeed -= delta; 
-            if (fallSpeed < 0.5) fallSpeed = 0.5;
-            if (fallSpeed > 10) fallSpeed = 10;
-        
-            // ADD THIS LINE: It puts the "focus" back on the game so she can keep typing immediately
-            window.focus(); 
-        }
-        
         function togglePause() {
             if (!active || reporting) return;
             paused = !paused;
@@ -255,7 +268,6 @@
                 let char = targetedWord.text[inputStr.length];
                 if (char) document.getElementById('k-' + char)?.classList.add('guide');
             } else if (activeWords.length > 0) {
-                // Show guides for all possible starting letters
                 activeWords.forEach(w => {
                     document.getElementById('k-' + w.text[0])?.classList.add('guide');
                 });
@@ -269,7 +281,11 @@
                 this.text = filtered[Math.floor(Math.random() * filtered.length)] || seeds[0];
                 this.x = Math.random() * (canvas.width - 180) + 90;
                 this.y = -20;
-                this.speed = 0.2 + (level * 0.15);
+                this.baseSpeed = 0.2 + (level * 0.15);
+                this.updateSpeed();
+            }
+            updateSpeed() {
+                this.speed = this.baseSpeed * fallSpeedMult;
             }
             draw() {
                 ctx.textAlign = "center";
@@ -294,7 +310,9 @@
         function loop(t) {
             if (!active || reporting || paused) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (t - lastS > (6000 - (level * 500))) {
+            // Spawn rate slightly affected by speed multiplier too
+            let spawnRate = (6000 - (level * 500)) / Math.sqrt(fallSpeedMult);
+            if (t - lastS > spawnRate) {
                 activeWords.push(new Word());
                 lastS = t;
             }
@@ -326,7 +344,6 @@
             if (kEl) { kEl.classList.add('active'); setTimeout(() => kEl.classList.remove('active'), 120); }
 
             if (!targetedWord) {
-                // Find lowest word starting with this letter
                 const matches = activeWords.filter(w => w.text.startsWith(c));
                 if (matches.length > 0) {
                     targetedWord = matches.sort((a,b) => b.y - a.y)[0];
