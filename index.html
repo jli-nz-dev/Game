@@ -123,6 +123,21 @@
     </template>
 
     <script>
+        // --- IPAD KEYBOARD FIX START ---
+        document.addEventListener('touchstart', function() {
+            window.focus();
+            let hiddenInput = document.getElementById('kb-fix');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.id = 'kb-fix';
+                hiddenInput.type = 'text';
+                hiddenInput.style.position = 'fixed';
+                hiddenInput.style.opacity = '0';
+                document.body.appendChild(hiddenInput);
+            }
+        hiddenInput.focus();
+        });
+    // --- IPAD KEYBOARD FIX END ---
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const seeds = ["WAND", "ROBE", "OWL", "HAT", "INK", "FLY", "CAT", "RAT", "CUP", "BOY", "MAP", "KEY", "BED", "TEA", "SUN", "BAG", "BOOK", "TOAD", "GOLD", "GATE", "FIRE", "WALL", "CAKE", "WIND", "BIRD", "SNOW", "SHIP", "MILK", "JUMP", "DARK", "FAST", "LOCK", "DOOR", "WOOD", "TREE", "SOUP", "COIN", "DUST", "DESK", "FROG", "MAGIC", "CLOAK", "TRAIN", "GHOST", "SPELL", "BRICK", "STONE", "BROOM", "STAIR", "PIZZA", "STARS", "NIGHT", "LIGHT", "GLOVE", "SNAKE", "MOUSE", "VAULT", "SCARF", "POTION", "WIZARD", "CASTLE", "DRAGON", "GOBLIN", "MIRROR", "SCHOOL", "FLOWER", "GIANTS", "DIARY", "SPIDER", "FOREST", "KNIGHT", "SILVER", "PURPLE", "SHIELD", "SPIRIT", "ARMOR", "GARDEN", "KITCHEN", "PUMPKIN", "BROOMS", "CAULDRON", "FEATHER", "LIBRARY", "WHISPER", "PHANTOM", "ALCHEMY", "CRYSTAL", "LANTERN", "SHADOW", "TOWER", "BRIDGE", "SCROLL", "BEAST", "TICKET", "CANDLE", "REMEDY", "BREW", "ELIXIR", "TALENT", "QUEST", "AMULET", "CHARM", "JINX", "HEX", "RUNE", "SIGHT", "DREAM", "FLAME", "FROST", "STORM", "CLOUD", "POWER", "CROWN", "SCEPTRE", "VALLEY", "MOUNTAIN", "ISLAND", "OCEAN", "DESERT", "JUNGLE", "CAVERN", "TUNNEL", "TEMPLE", "STATUE", "PILLAR", "THRONE", "CHAMBER", "PASSAGE", "SECRET", "RIDDLE", "PUZZLE", "SYMBOL", "LEGEND", "FABLE", "STORY", "MYTH", "REWARD", "TROPHY", "MEDAL", "BADGE", "TOKEN", "JEWEL", "DIAMOND", "RUBY", "PEARL", "EMERALD", "SAPPHIRE", "BOTTLE", "CHEST", "BASKET", "HAMMER", "CHISEL", "NEEDLE", "THREAD", "FABRIC", "LEATHER", "CANVAS", "GRIFFIN", "PHOENIX", "UNICORN", "DRAGON", "CENTAUR", "MERMAID", "PIXIE", "FAIRY", "GNOME", "TROLL", "GIANT", "GOLEM", "SPIRIT", "WRAITH", "BANSHEE", "SPECTRE", "KEEPER", "MASTER", "ELDER", "LEADER", "FRIEND", "COUSIN", "FAMILY", "SISTER", "BROTHER", "FATHER", "MOTHER"].map(w => w.toUpperCase());
