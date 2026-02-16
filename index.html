@@ -46,8 +46,8 @@
         }
         .artifact-fragment {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: #3d3d5c;
             border: 1px solid rgba(241, 211, 142, 0.3);
             border-radius: 5px;
@@ -98,6 +98,9 @@
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; background: rgba(13, 13, 26, 0.98); }
         .scroll { background: #f4e4bc; color: #2a0a0a; padding: 25px; border-radius: 8px; text-align: center; width: 90%; max-width: 500px; border: 3px solid #d4c49c; box-shadow: 0 0 30px #000; overflow-y: auto; max-height: 90vh; }
         
+        .syllabus-table { width: 100%; font-size: 0.75rem; text-align: left; margin: 10px 0; border-collapse: collapse; }
+        .syllabus-table td { padding: 6px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+
         button { padding: 12px; font-size: 1.1rem; background: var(--wizard-red); color: var(--wizard-gold); border: 2px solid var(--wizard-gold); cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 10px; width: 100%; }
         #watermark { padding-top: 10px; font-size: 13px; text-align: center; color: var(--wizard-gold); font-style: italic; opacity: 0.9; text-shadow: 0 0 5px rgba(241, 211, 142, 0.4); }
     </style>
@@ -156,6 +159,14 @@
         <div class="scroll">
             <h1 style="color: var(--wizard-red); margin: 0;">Academy Syllabus</h1>
             <p>Master the curriculum to become a Great Wizard:</p>
+            <table class="syllabus-table">
+                <tr><td><b>Year 1</b></td><td>Home Row + E, I, R, U (Single Letters)</td></tr>
+                <tr><td><b>Year 2</b></td><td>Full Top Row (Single Letters)</td></tr>
+                <tr><td><b>Year 3</b></td><td>Full Bottom Row (Single Letters)</td></tr>
+                <tr><td><b>Year 4</b></td><td>Short Spells (2-3 letters)</td></tr>
+                <tr><td><b>Year 5</b></td><td>Medium Spells (4-6 letters)</td></tr>
+                <tr><td><b>Year 6</b></td><td>Advanced Magic (Full Words)</td></tr>
+            </table>
             <input type="text" id="name-input" placeholder="Enter Name" maxlength="12" style="width:80%; padding:10px; margin:10px; border:2px solid var(--wizard-red); border-radius:5px; text-align:center;">
             <div style="margin: 10px 0; font-size: 0.9rem;">
                 <label><input type="radio" name="lives-mode" value="999" checked> ♾️ Practice</label>
@@ -176,7 +187,7 @@
         <div class="scroll">
             <h1 id="rep-title">📜 Year Passed!</h1>
             <div id="artifact-reward-box" style="margin: 15px auto; padding: 10px; border: 2px dashed var(--wizard-red); border-radius: 10px; display:none;">
-                <p style="font-weight: bold; color: var(--wizard-red); margin: 5px 0;">✨ Fragmet Collected! ✨</p>
+                <p style="font-weight: bold; color: var(--wizard-red); margin: 5px 0;">✨ Fragment Collected! ✨</p>
             </div>
             <p id="rep-stats"></p>
             <button id="advance-btn" onclick="nextYear()">ADVANCE (Enter)</button>
@@ -248,7 +259,6 @@
             document.getElementById('sidebar-title').innerText = d.title; 
             document.getElementById('sidebar-task').innerText = d.task; 
             document.getElementById('sidebar-tips').innerText = d.tips; 
-            // Update artifact status
             document.getElementById('artifact-status').innerText = `Frag ${level-1}/6 Collected`;
         }
 
@@ -335,7 +345,7 @@
                 sounds.complete();
                 document.getElementById('artifact-container').classList.add('complete');
                 document.getElementById('rep-title').innerText = "🏆 MASTER WIZARD!";
-                document.getElementById('rep-stats').innerHTML = `<span style="font-size:1.2rem; color:var(--wizard-red);">Well done my dear Scarlett for completing this wizard challenge! I'm so proud of you!</span><br><br>Final Score: ${score}`;
+                document.getElementById('rep-stats').innerHTML = `<span style="font-size:1.1rem; color:var(--wizard-red); font-weight:bold;">Well done my dear Scarlett for completing this wizard challenge! I'm so proud of you!</span><br><br>Final Score: ${score}`;
                 document.getElementById('advance-btn').innerText = "PLAY AGAIN (Enter)";
             } else {
                 document.getElementById('rep-title').innerText = `📜 Year ${level} Complete!`;
