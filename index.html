@@ -11,7 +11,7 @@
         #game-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: row; }
         
         #sidebar { 
-            width: 230px; 
+            width: 240px; 
             background: rgba(20, 20, 40, 0.8); 
             border-right: 3px solid var(--wizard-red); 
             padding: 15px; 
@@ -19,7 +19,7 @@
             display: flex; 
             flex-direction: column; 
             z-index: 30;
-            gap: 15px;
+            gap: 12px;
         }
         .parchment-box {
             background: #f4e4bc;
@@ -33,6 +33,40 @@
         }
         .parchment-box h3 { margin-top: 0; color: var(--wizard-red); font-size: 0.9rem; border-bottom: 1px solid rgba(116, 27, 27, 0.3); margin-bottom: 5px; }
         .tips-box { background: #e8d5a7; border-color: #c4b48c; }
+
+        /* Artifact Display */
+        #artifact-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .artifact-fragment {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #3d3d5c;
+            border: 1px solid rgba(241, 211, 142, 0.3);
+            border-radius: 5px;
+            opacity: 0.1;
+            transition: all 1s ease;
+        }
+        .artifact-fragment.collected {
+            background: radial-gradient(circle, #ffd700, #b8860b);
+            opacity: 1;
+            box-shadow: 0 0 15px #ffd700;
+            border-color: #fff;
+        }
+        #artifact-container.complete {
+            animation: pulse-gold 2s infinite alternate;
+        }
+        @keyframes pulse-gold {
+            from { filter: drop-shadow(0 0 5px #ffd700); transform: scale(1); }
+            to { filter: drop-shadow(0 0 25px #ffd700); transform: scale(1.1); }
+        }
 
         #main-play-area { flex: 1; display: flex; flex-direction: column; position: relative; }
 
@@ -50,19 +84,13 @@
 
         #keyboard-section { height: 200px; background: #1a1a2e; border-top: 4px solid var(--wizard-red); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; position: relative; }
         .key-row { display: flex; align-items: center; margin-bottom: 4px; }
-        
-        .row-label { 
-            width: 110px; text-align: right; margin-right: 15px; font-size: 0.7rem; 
-            text-transform: uppercase; color: var(--wizard-blue); letter-spacing: 1px; 
-            font-weight: bold; opacity: 0.8; transition: all 0.2s;
-        }
+        .row-label { width: 110px; text-align: right; margin-right: 15px; font-size: 0.7rem; text-transform: uppercase; color: var(--wizard-blue); letter-spacing: 1px; font-weight: bold; opacity: 0.8; transition: all 0.2s; }
         .row-label.spark { color: var(--wizard-gold); text-shadow: 0 0 10px var(--wizard-gold); transform: scale(1.1); opacity: 1; }
 
         .key { width: 7vw; max-width: 40px; height: 40px; border: 1px solid #3d3d5c; border-radius: 6px; margin: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-family: 'Courier New', monospace; color: #5c5c8a; background: #121225; transition: 0.1s; }
         .key.active { background: var(--wizard-gold); color: #2a0a0a; box-shadow: 0 0 15px var(--wizard-gold); transform: scale(0.9); }
         .key.guide { border-color: var(--wizard-blue); box-shadow: 0 0 15px var(--wizard-blue); color: #fff; background: #1e3a5f; }
         .key.locked { opacity: 0.15; }
-        /* Highlighting F and J grooves */
         #k-F, #k-J { border-bottom: 3px solid var(--wizard-blue); }
 
         #input-display { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 30px; color: #2a0a0a; background: var(--wizard-gold); padding: 5px 35px; border-radius: 10px; border: 3px solid var(--wizard-red); font-weight: bold; z-index: 5; height: 40px; min-width: 120px; text-align: center; line-height: 40px;}
@@ -70,9 +98,6 @@
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; background: rgba(13, 13, 26, 0.98); }
         .scroll { background: #f4e4bc; color: #2a0a0a; padding: 25px; border-radius: 8px; text-align: center; width: 90%; max-width: 500px; border: 3px solid #d4c49c; box-shadow: 0 0 30px #000; overflow-y: auto; max-height: 90vh; }
         
-        .syllabus-table { width: 100%; font-size: 0.75rem; text-align: left; margin: 10px 0; border-collapse: collapse; }
-        .syllabus-table td { padding: 4px; border-bottom: 1px solid rgba(0,0,0,0.1); }
-
         button { padding: 12px; font-size: 1.1rem; background: var(--wizard-red); color: var(--wizard-gold); border: 2px solid var(--wizard-gold); cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 10px; width: 100%; }
         #watermark { padding-top: 10px; font-size: 13px; text-align: center; color: var(--wizard-gold); font-style: italic; opacity: 0.9; text-shadow: 0 0 5px rgba(241, 211, 142, 0.4); }
     </style>
@@ -85,12 +110,26 @@
                 <h3 id="sidebar-title">Year 1</h3>
                 <p id="sidebar-task"></p>
             </div>
+            
+            <div class="parchment-box" style="text-align: center;">
+                <h3>Mastery Medallion</h3>
+                <div id="artifact-container">
+                    <div class="artifact-fragment" style="transform: rotate(0deg) translate(30px) rotate(0deg);" id="frag-1"></div>
+                    <div class="artifact-fragment" style="transform: rotate(60deg) translate(30px) rotate(-60deg);" id="frag-2"></div>
+                    <div class="artifact-fragment" style="transform: rotate(120deg) translate(30px) rotate(-120deg);" id="frag-3"></div>
+                    <div class="artifact-fragment" style="transform: rotate(180deg) translate(30px) rotate(-180deg);" id="frag-4"></div>
+                    <div class="artifact-fragment" style="transform: rotate(240deg) translate(30px) rotate(-240deg);" id="frag-5"></div>
+                    <div class="artifact-fragment" style="transform: rotate(300deg) translate(30px) rotate(-300deg);" id="frag-6"></div>
+                </div>
+                <p id="artifact-status" style="font-size: 0.65rem; color: #666; margin: 0;">Frag 0/6 Collected</p>
+            </div>
+
             <div class="parchment-box tips-box">
                 <h3>Wizard's Tips</h3>
                 <p id="sidebar-tips" style="font-size: 0.75rem; font-style: italic;"></p>
             </div>
             <div style="flex:1"></div>
-            <div id="watermark">Made for Scarlett, by Daddy</div>
+            <div id="watermark">Made for my dear Scarlett, by Daddy</div>
         </div>
 
         <div id="main-play-area">
@@ -117,14 +156,6 @@
         <div class="scroll">
             <h1 style="color: var(--wizard-red); margin: 0;">Academy Syllabus</h1>
             <p>Master the curriculum to become a Great Wizard:</p>
-            <table class="syllabus-table">
-                <tr><td><b>Year 1</b></td><td>Home Row + E, I, R, U (Single Letters)</td></tr>
-                <tr><td><b>Year 2</b></td><td>Full Top Row (Single Letters)</td></tr>
-                <tr><td><b>Year 3</b></td><td>Full Bottom Row (Single Letters)</td></tr>
-                <tr><td><b>Year 4</b></td><td>Short Spells (2-3 letters)</td></tr>
-                <tr><td><b>Year 5</b></td><td>Medium Spells (4-6 letters)</td></tr>
-                <tr><td><b>Year 6</b></td><td>Advanced Magic (Full Words)</td></tr>
-            </table>
             <input type="text" id="name-input" placeholder="Enter Name" maxlength="12" style="width:80%; padding:10px; margin:10px; border:2px solid var(--wizard-red); border-radius:5px; text-align:center;">
             <div style="margin: 10px 0; font-size: 0.9rem;">
                 <label><input type="radio" name="lives-mode" value="999" checked> ♾️ Practice</label>
@@ -136,17 +167,19 @@
 
     <div id="pause-screen" class="overlay" style="display: none;">
         <div class="scroll" style="background: #1a1a2e; border: 3px solid var(--wizard-blue); color: white;">
-            <h1 style="color: var(--wizard-blue);">Magic Suspended</h1>
-            <p>The Time-Turner has paused the lesson.</p>
-            <button onclick="togglePause()" style="background: var(--wizard-blue);">RESUME MAGIC (Esc)</button>
+            <h1>Magic Suspended</h1>
+            <button onclick="togglePause()">RESUME MAGIC (Esc)</button>
         </div>
     </div>
 
     <div id="report-card" class="overlay" style="display: none;">
         <div class="scroll">
             <h1 id="rep-title">📜 Year Passed!</h1>
+            <div id="artifact-reward-box" style="margin: 15px auto; padding: 10px; border: 2px dashed var(--wizard-red); border-radius: 10px; display:none;">
+                <p style="font-weight: bold; color: var(--wizard-red); margin: 5px 0;">✨ Fragmet Collected! ✨</p>
+            </div>
             <p id="rep-stats"></p>
-            <button onclick="nextYear()">ADVANCE (Enter)</button>
+            <button id="advance-btn" onclick="nextYear()">ADVANCE (Enter)</button>
             <button onclick="location.reload()" style="background:#3d3d5c; margin-top:5px;">BACK TO LOBBY</button>
         </div>
     </div>
@@ -164,90 +197,61 @@
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration, vol) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
         const sounds = {
             correct: () => playTone(880, 'sine', 0.2, 0.1),
-            wrong: () => {
-                // Ribbit/Frog sound synth
-                playTone(120, 'sawtooth', 0.1, 0.1);
-                setTimeout(() => playTone(100, 'sawtooth', 0.15, 0.1), 50);
-            },
-            levelUp: () => {
-                playTone(523.25, 'sine', 0.2, 0.1);
-                setTimeout(() => playTone(659.25, 'sine', 0.2, 0.1), 100);
-                setTimeout(() => playTone(783.99, 'sine', 0.4, 0.1), 200);
-            }
+            wrong: () => { playTone(120, 'sawtooth', 0.1, 0.1); setTimeout(() => playTone(100, 'sawtooth', 0.15, 0.1), 50); },
+            levelUp: () => { playTone(523.25,'sine',0.2,0.1); setTimeout(()=>playTone(659.25,'sine',0.2,0.1),100); setTimeout(()=>playTone(783.99,'sine',0.4,0.1),200); },
+            complete: () => { [523, 659, 783, 1046].forEach((f,i) => setTimeout(()=>playTone(f, 'sine', 0.5, 0.1), i*150)); }
         };
 
         const YEAR_DATA = {
-            1: { 
-                keys: "ASDFGHJKLEIRU", words: false, title: "Year 1: Home Base", 
-                task: "Home Row + E, I, R, U.", 
-                tips: "Feel the little bumps on F and J? Keep your index fingers there. Let your other fingers rest lightly on the keys next to them!" 
-            },
-            2: { 
-                keys: "ASDFGHJKLEIRUQWTYOP", words: false, title: "Year 2: High Altitudes", 
-                task: "Full Top Row added.", 
-                tips: "Reach up to the Top Row with one finger at a time, then hop it right back to its home base. Try not to look at your hands!" 
-            },
-            3: { 
-                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: false, title: "Year 3: Deep Dungeons", 
-                task: "Full keyboard unlocked.", 
-                tips: "The bottom row is tricky! Use your pinky for 'Z' and your ring finger for 'X'. Keep your wrists straight like a piano player." 
-            },
-            4: { 
-                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 2, max: 3, title: "Year 4: Basic Charms", 
-                task: "Short spells (2-3 letters).", 
-                tips: "Type in a rhythm! One-two, one-two. It's easier to cast spells if your fingers dance to a steady beat." 
-            },
-            5: { 
-                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 4, max: 6, title: "Year 5: Master Spells", 
-                task: "Medium spells (4-6 letters).", 
-                tips: "Don't rush! Speed comes from accuracy. If you hit a wrong key, the frog croak is a reminder to slow down and find your home row." 
-            },
-            6: { 
-                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 7, max: 20, title: "Year 6: Ultimate Magic", 
-                task: "The final test!", 
-                tips: "You've mastered the Academy! Keep your eyes on the screen and let your fingers find the path. You are a Grand Wizard now!" 
-            }
+            1: { keys: "ASDFGHJKLEIRU", words: false, title: "Year 1: Home Base", task: "Home Row + E, I, R, U.", tips: "Feel the little bumps on F and J? Keep your index fingers there!" },
+            2: { keys: "ASDFGHJKLEIRUQWTYOP", words: false, title: "Year 2: High Altitudes", task: "Full Top Row added.", tips: "Reach up with one finger at a time, then hop it right back home!" },
+            3: { keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: false, title: "Year 3: Deep Dungeons", task: "Full keyboard unlocked.", tips: "The bottom row is tricky! Keep your wrists straight like a piano player." },
+            4: { keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 2, max: 3, title: "Year 4: Basic Charms", task: "Short spells (2-3 letters).", tips: "Type in a rhythm! One-two, one-two. It's easier to cast spells with a beat." },
+            5: { keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 4, max: 6, title: "Year 5: Master Spells", task: "Medium spells (4-6 letters).", tips: "Don't rush! Speed comes from accuracy. Listen for the magic chime." },
+            6: { keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 7, max: 20, title: "Year 6: Ultimate Magic", task: "The final test!", tips: "You've mastered the Academy! Keep your eyes on the screen, Grand Wizard!" }
         };
 
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const seeds = ["WAND", "ROBE", "OWL", "HAT", "INK", "FLY", "CAT", "RAT", "CUP", "BOY", "MAP", "KEY", "BED", "TEA", "SUN", "BAG", "BOOK", "TOAD", "GOLD", "GATE", "FIRE", "WALL", "CAKE", "WIND", "BIRD", "SNOW", "SHIP", "MILK", "JUMP", "DARK", "FAST", "LOCK", "DOOR", "WOOD", "TREE", "SOUP", "COIN", "DUST", "DESK", "FROG", "MAGIC", "CLOAK", "TRAIN", "GHOST", "SPELL", "BRICK", "STONE", "BROOM", "STAIR", "PIZZA", "STARS", "NIGHT", "LIGHT", "GLOVE", "SNAKE", "MOUSE", "VAULT", "SCARF", "POTION", "WIZARD", "CASTLE", "DRAGON", "GOBLIN", "MIRROR", "SCHOOL", "FLOWER", "GIANTS", "DIARY", "SPIDER", "FOREST", "KNIGHT", "SILVER", "PURPLE", "SHIELD", "SPIRIT", "ARMOR", "GARDEN", "KITCHEN", "PUMPKIN", "BROOMS", "CAULDRON", "FEATHER", "LIBRARY", "WHISPER", "PHANTOM", "ALCHEMY", "CRYSTAL", "LANTERN", "SHADOW", "TOWER", "BRIDGE", "SCROLL", "BEAST", "TICKET", "CANDLE", "REMEDY", "BREW", "ELIXIR", "TALENT", "QUEST", "AMULET", "CHARM", "JINX", "HEX", "RUNE", "SIGHT", "DREAM", "FLAME", "FROST", "STORM", "CLOUD", "POWER", "CROWN", "SCEPTRE", "VALLEY", "MOUNTAIN", "ISLAND", "OCEAN", "DESERT", "JUNGLE", "CAVERN", "TUNNEL", "TEMPLE", "STATUE", "PILLAR", "THRONE", "CHAMBER", "PASSAGE", "SECRET", "RIDDLE", "PUZZLE", "SYMBOL", "LEGEND", "FABLE", "STORY", "MYTH", "REWARD", "TROPHY", "MEDAL", "BADGE", "TOKEN", "JEWEL", "DIAMOND", "RUBY", "PEARL", "EMERALD", "SAPPHIRE", "BOTTLE", "CHEST", "BASKET", "HAMMER", "CHISEL", "NEEDLE", "THREAD", "FABRIC", "LEATHER", "CANVAS", "GRIFFIN", "PHOENIX", "UNICORN", "DRAGON", "CENTAUR", "MERMAID", "PIXIE", "FAIRY", "GNOME", "TROLL", "GIANT", "GOLEM", "SPIRIT", "WRAITH", "BANSHEE", "SPECTRE", "KEEPER", "MASTER", "ELDER", "LEADER", "FRIEND", "COUSIN", "FAMILY", "SISTER", "BROTHER", "FATHER", "MOTHER"].map(w => w.toUpperCase());
 
-        const keyMap = {};
-        const layouts = [{id:'r1',chars:"QWERTYUIOP"},{id:'r2',chars:"ASDFGHJKL"},{id:'r3',chars:"ZXCVBNM"}];
+        const keyMap = {}; const layouts = [{id:'r1',chars:"QWERTYUIOP"},{id:'r2',chars:"ASDFGHJKL"},{id:'r3',chars:"ZXCVBNM"}];
         layouts.forEach(r => {
             const el = document.getElementById(r.id);
             r.chars.split("").forEach(c => {
-                keyMap[c] = r.id;
-                const k = document.createElement('div');
-                k.className = 'key'; k.id = 'k-' + c; k.innerText = c;
-                el.appendChild(k);
+                keyMap[c] = r.id; const k = document.createElement('div');
+                k.className = 'key'; k.id = 'k-' + c; k.innerText = c; el.appendChild(k);
             });
         });
 
-        const snitchGrid = document.getElementById('snitch-grid');
-        const snitchTemplate = document.getElementById('snitch-svg');
+        const snitchGrid = document.getElementById('snitch-grid'); const snitchTemplate = document.getElementById('snitch-svg');
         for(let i=0; i<20; i++) snitchGrid.appendChild(snitchTemplate.content.cloneNode(true));
 
-        let activeWords = [], score = 0, level = 1, typed = 0, lives = 5, active = false, reporting = false, paused = false, playerName = "Scarlett", inputStr = "", lastS = 0, targetedWord = null, fallSpeedMult = 1.0;
+        let activeWords = [], score = 0, level = 1, typed = 0, lives = 5, active = false, reporting = false, paused = false, inputStr = "", lastS = 0, targetedWord = null, fallSpeedMult = 1.0;
 
         function changeSpeed(d) { fallSpeedMult = Math.max(0.4, Math.min(3.0, fallSpeedMult + d)); document.getElementById('speed-val-display').innerText = `SPEED: ${fallSpeedMult.toFixed(1)}x`; }
         function togglePause() { if (!active || reporting) return; paused = !paused; document.getElementById('pause-screen').style.display = paused ? 'flex' : 'none'; if (!paused) { lastS = performance.now(); requestAnimationFrame(loop); } }
-        function startGame() { if (audioCtx.state === 'suspended') audioCtx.resume(); playerName = document.getElementById('name-input').value || "Scarlett"; lives = parseInt(document.querySelector('input[name="lives-mode"]:checked').value); score = 0; level = 1; document.getElementById('start-screen').style.display = 'none'; document.getElementById('report-card').style.display = 'none'; resetGameSession(); requestAnimationFrame(loop); }
+        function startGame() { if (audioCtx.state === 'suspended') audioCtx.resume(); lives = parseInt(document.querySelector('input[name="lives-mode"]:checked').value); score = 0; level = 1; document.getElementById('start-screen').style.display = 'none'; resetGameSession(); requestAnimationFrame(loop); }
         function resetGameSession() { typed = 0; activeWords = []; inputStr = ""; active = true; reporting = false; targetedWord = null; paused = false; updateSidebar(); resetSnitches(); resize(); updateUI(); }
-        function updateSidebar() { const d = YEAR_DATA[level] || YEAR_DATA[6]; document.getElementById('sidebar-title').innerText = d.title; document.getElementById('sidebar-task').innerText = d.task; document.getElementById('sidebar-tips').innerText = d.tips; }
+        
+        function updateSidebar() { 
+            const d = YEAR_DATA[level] || YEAR_DATA[6]; 
+            document.getElementById('sidebar-title').innerText = d.title; 
+            document.getElementById('sidebar-task').innerText = d.task; 
+            document.getElementById('sidebar-tips').innerText = d.tips; 
+            // Update artifact status
+            document.getElementById('artifact-status').innerText = `Frag ${level-1}/6 Collected`;
+        }
+
         function resetSnitches() { document.querySelectorAll('.snitch').forEach(s => s.classList.remove('active')); }
         function resize() { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; }
         window.onresize = resize;
@@ -307,7 +311,6 @@
                 const m = activeWords.filter(w => w.text.startsWith(c));
                 if (m.length > 0) { targetedWord = m.sort((a,b)=>b.y-a.y)[0]; inputStr = c; hit = true; }
             } else if (c === targetedWord.text[inputStr.length]) { inputStr += c; hit = true; }
-            
             if (hit) { 
                 sounds.correct(); 
                 const lbl = document.getElementById('label-' + keyMap[c]);
@@ -316,13 +319,46 @@
 
             if (targetedWord && inputStr === targetedWord.text) {
                 score += inputStr.length * 10; typed++; activeWords = activeWords.filter(w => w !== targetedWord); targetedWord = null; inputStr = "";
-                if (typed >= 20) { reporting = true; sounds.levelUp(); document.getElementById('rep-title').innerText = `📜 Year ${level} Complete!`; document.getElementById('rep-stats').innerText = `Mastered! Total Score: ${score}`; document.getElementById('report-card').style.display = 'flex'; }
+                if (typed >= 20) showReport();
             }
             document.getElementById('input-display').innerText = inputStr || "READY"; updateUI();
         }
 
-        function nextYear() { if (document.getElementById('rep-title').innerText === "🧙 Magic Exhausted!") { startGame(); return; } if (level >= 6) { location.reload(); return; } level++; document.getElementById('report-card').style.display = 'none'; resetGameSession(); lastS = performance.now(); requestAnimationFrame(loop); }
-        function endGame() { reporting = true; sounds.wrong(); document.getElementById('rep-title').innerText = "🧙 Magic Exhausted!"; document.getElementById('rep-stats').innerText = `Final Score: ${score}. Try Year ${level} again!`; document.getElementById('report-card').style.display = 'flex'; }
+        function showReport() {
+            reporting = true;
+            sounds.levelUp();
+            const fragId = `frag-${level}`;
+            document.getElementById(fragId).classList.add('collected');
+            document.getElementById('artifact-reward-box').style.display = 'block';
+            
+            if (level === 6) {
+                sounds.complete();
+                document.getElementById('artifact-container').classList.add('complete');
+                document.getElementById('rep-title').innerText = "🏆 MASTER WIZARD!";
+                document.getElementById('rep-stats').innerHTML = `<span style="font-size:1.2rem; color:var(--wizard-red);">Well done my dear Scarlett for completing this wizard challenge! I'm so proud of you!</span><br><br>Final Score: ${score}`;
+                document.getElementById('advance-btn').innerText = "PLAY AGAIN (Enter)";
+            } else {
+                document.getElementById('rep-title').innerText = `📜 Year ${level} Complete!`;
+                document.getElementById('rep-stats').innerText = `You found a fragment of the Medallion! Total Score: ${score}`;
+            }
+            document.getElementById('report-card').style.display = 'flex';
+        }
+
+        function nextYear() { 
+            if (document.getElementById('rep-title').innerText === "🧙 Magic Exhausted!") { startGame(); return; } 
+            if (level >= 6) { location.reload(); return; } 
+            level++; 
+            document.getElementById('report-card').style.display = 'none'; 
+            document.getElementById('artifact-reward-box').style.display = 'none';
+            resetGameSession(); lastS = performance.now(); requestAnimationFrame(loop); 
+        }
+
+        function endGame() { 
+            reporting = true; sounds.wrong(); 
+            document.getElementById('rep-title').innerText = "🧙 Magic Exhausted!"; 
+            document.getElementById('rep-stats').innerText = `Final Score: ${score}. Try Year ${level} again!`; 
+            document.getElementById('report-card').style.display = 'flex'; 
+        }
 
         window.addEventListener('keydown', (e) => {
             if (e.key === "Escape") { togglePause(); return; }
