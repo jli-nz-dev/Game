@@ -8,8 +8,34 @@
         :root { --wizard-gold: #f1d38e; --wizard-red: #741b1b; --wizard-blue: #4facfe; --bg-dark: #0d0d1a; }
         body { margin: 0; overflow: hidden; background: var(--bg-dark); font-family: 'Georgia', serif; color: var(--wizard-gold); display: flex; flex-direction: column; height: 100vh; }
         
-        #game-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        #game-container { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: row; }
         
+        #sidebar { 
+            width: 230px; 
+            background: rgba(20, 20, 40, 0.8); 
+            border-right: 3px solid var(--wizard-red); 
+            padding: 15px; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            z-index: 30;
+            gap: 15px;
+        }
+        .parchment-box {
+            background: #f4e4bc;
+            color: #2a0a0a;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #d4c49c;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            font-size: 0.82rem;
+            line-height: 1.3;
+        }
+        .parchment-box h3 { margin-top: 0; color: var(--wizard-red); font-size: 0.9rem; border-bottom: 1px solid rgba(116, 27, 27, 0.3); margin-bottom: 5px; }
+        .tips-box { background: #e8d5a7; border-color: #c4b48c; }
+
+        #main-play-area { flex: 1; display: flex; flex-direction: column; position: relative; }
+
         #ui-layer { width: 100%; padding: 15px; display: flex; justify-content: space-between; box-sizing: border-box; z-index: 20; background: var(--bg-dark); border-bottom: 3px solid var(--wizard-red); }
         canvas { flex: 1; display: block; width: 100%; background: #0d0d1a; }
 
@@ -18,97 +44,100 @@
         .snitch.active { fill: #ffd700; filter: drop-shadow(0 0 5px #ffd700) grayscale(0); transform: scale(1.2); }
         #lives-display { color: #ff4d4d; font-size: 20px; letter-spacing: 2px; margin-top: 5px; }
 
-        /* Speed Control Styling */
         #speed-controls { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 100; align-items: center; }
         .speed-btn { padding: 10px; font-size: 20px; background: rgba(116, 27, 27, 0.6); color: var(--wizard-gold); border: 2px solid var(--wizard-gold); border-radius: 8px; cursor: pointer; width: 50px; }
         #speed-val-display { font-weight: bold; font-size: 14px; text-shadow: 0 0 5px black; }
 
-        /* High Score Snitch Animation */
-        #special-snitch {
-            position: absolute; display: none; z-index: 50; pointer-events: none;
-            flex-direction: column; align-items: center; text-align: center;
-            animation: flyAround 6s infinite ease-in-out;
+        #keyboard-section { height: 200px; background: #1a1a2e; border-top: 4px solid var(--wizard-red); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; position: relative; }
+        .key-row { display: flex; align-items: center; margin-bottom: 4px; }
+        
+        .row-label { 
+            width: 110px; text-align: right; margin-right: 15px; font-size: 0.7rem; 
+            text-transform: uppercase; color: var(--wizard-blue); letter-spacing: 1px; 
+            font-weight: bold; opacity: 0.8; transition: all 0.2s;
         }
-        @keyframes flyAround {
-            0% { transform: translate(10vw, 10vh); }
-            25% { transform: translate(70vw, 30vh); }
-            50% { transform: translate(20vw, 60vh); }
-            75% { transform: translate(60vw, 10vh); }
-            100% { transform: translate(10vw, 10vh); }
-        }
-        .congrats-bubble {
-            background: var(--wizard-gold); color: var(--wizard-red);
-            padding: 10px; border-radius: 15px; font-weight: bold;
-            border: 2px solid var(--wizard-red); box-shadow: 0 0 15px var(--wizard-gold);
-            margin-bottom: 5px; font-size: 14px;
-        }
+        .row-label.spark { color: var(--wizard-gold); text-shadow: 0 0 10px var(--wizard-gold); transform: scale(1.1); opacity: 1; }
 
-        #keyboard-section { height: 200px; background: #1a1a2e; border-top: 4px solid var(--wizard-red); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; position: relative; }
-        .key-row { display: flex; }
-        .key { width: 7vw; max-width: 42px; height: 42px; border: 1px solid #3d3d5c; border-radius: 6px; margin: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-family: 'Courier New', monospace; color: #5c5c8a; background: #121225; transition: 0.1s; }
+        .key { width: 7vw; max-width: 40px; height: 40px; border: 1px solid #3d3d5c; border-radius: 6px; margin: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-family: 'Courier New', monospace; color: #5c5c8a; background: #121225; transition: 0.1s; }
         .key.active { background: var(--wizard-gold); color: #2a0a0a; box-shadow: 0 0 15px var(--wizard-gold); transform: scale(0.9); }
         .key.guide { border-color: var(--wizard-blue); box-shadow: 0 0 15px var(--wizard-blue); color: #fff; background: #1e3a5f; }
+        .key.locked { opacity: 0.15; }
+        /* Highlighting F and J grooves */
+        #k-F, #k-J { border-bottom: 3px solid var(--wizard-blue); }
 
-        #watermark { position: absolute; bottom: 8px; width: 100%; text-align: center; font-size: 14px; color: var(--wizard-gold); font-weight: bold; text-shadow: 0 0 8px rgba(241, 211, 142, 0.6); opacity: 0.9; pointer-events: none;}
-        #input-display { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 30px; color: #2a0a0a; background: var(--wizard-gold); padding: 5px 35px; border-radius: 10px; border: 3px solid var(--wizard-red); font-weight: bold; letter-spacing: 3px; z-index: 5; height: 40px; min-width: 120px; text-align: center; line-height: 40px;}
+        #input-display { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 30px; color: #2a0a0a; background: var(--wizard-gold); padding: 5px 35px; border-radius: 10px; border: 3px solid var(--wizard-red); font-weight: bold; z-index: 5; height: 40px; min-width: 120px; text-align: center; line-height: 40px;}
 
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; background: rgba(13, 13, 26, 0.98); }
-        .scroll { background: #f4e4bc; color: #2a0a0a; padding: 25px; border-radius: 8px; text-align: center; width: 85%; max-width: 400px; border: 3px solid #d4c49c; box-shadow: 0 0 30px #000; overflow-y: auto; max-height: 90vh; }
+        .scroll { background: #f4e4bc; color: #2a0a0a; padding: 25px; border-radius: 8px; text-align: center; width: 90%; max-width: 500px; border: 3px solid #d4c49c; box-shadow: 0 0 30px #000; overflow-y: auto; max-height: 90vh; }
         
-        #name-input { width: 80%; padding: 10px; font-size: 1.2rem; border: 2px solid var(--wizard-red); border-radius: 5px; text-align: center; margin: 10px 0; }
-        .mode-selector { margin: 15px 0; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; }
+        .syllabus-table { width: 100%; font-size: 0.75rem; text-align: left; margin: 10px 0; border-collapse: collapse; }
+        .syllabus-table td { padding: 4px; border-bottom: 1px solid rgba(0,0,0,0.1); }
 
         button { padding: 12px; font-size: 1.1rem; background: var(--wizard-red); color: var(--wizard-gold); border: 2px solid var(--wizard-gold); cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 10px; width: 100%; }
-        button.load-btn { background: #3d3d5c; margin-top: 5px; font-size: 0.9rem; }
-        button.save-btn { background: #2e4a3e; border-color: #4facfe; margin-top: 20px; }
+        #watermark { padding-top: 10px; font-size: 13px; text-align: center; color: var(--wizard-gold); font-style: italic; opacity: 0.9; text-shadow: 0 0 5px rgba(241, 211, 142, 0.4); }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <div id="ui-layer">
-            <div>YEAR: <span id="lvl-val">1</span><div id="lives-display"></div></div>
-            <div id="progress-center">
-                <div style="font-size: 10px;">GOLDEN SNITCHES</div>
-                <div id="snitch-grid"></div>
+        <div id="sidebar">
+            <div class="parchment-box">
+                <h3 id="sidebar-title">Year 1</h3>
+                <p id="sidebar-task"></p>
             </div>
-            <div>POINTS: <span id="score-val">0</span></div>
+            <div class="parchment-box tips-box">
+                <h3>Wizard's Tips</h3>
+                <p id="sidebar-tips" style="font-size: 0.75rem; font-style: italic;"></p>
+            </div>
+            <div style="flex:1"></div>
+            <div id="watermark">Made for Scarlett, by Daddy</div>
         </div>
 
-        <div id="speed-controls">
-            <button class="speed-btn" onclick="changeSpeed(0.2)">▲</button>
-            <div id="speed-val-display">SPEED: 1.0x</div>
-            <button class="speed-btn" onclick="changeSpeed(-0.2)">▼</button>
-        </div>
+        <div id="main-play-area">
+            <div id="ui-layer">
+                <div>YEAR: <span id="lvl-val">1</span><div id="lives-display"></div></div>
+                <div id="progress-center">
+                    <div id="snitch-grid"></div>
+                </div>
+                <div>POINTS: <span id="score-val">0</span></div>
+            </div>
 
-        <canvas id="gameCanvas"></canvas>
-        <div id="input-display">READY</div>
+            <div id="speed-controls">
+                <button class="speed-btn" onclick="changeSpeed(0.2)">▲</button>
+                <div id="speed-val-display">SPEED: 1.0x</div>
+                <button class="speed-btn" onclick="changeSpeed(-0.2)">▼</button>
+            </div>
 
-        <div id="special-snitch">
-            <div class="congrats-bubble">NEW HIGH SCORE!<br>Amazing job, Scarlett! ✨</div>
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="#ffd700"><path d="M12,2L10,5L12,8L14,5L12,2M12,10C8.69,10 6,12.69 6,16C6,19.31 8.69,22 12,22C15.31,22 18,19.31 18,16C18,12.69 15.31,10 12,10M12,20C9.79,20 8,18.21 8,16C8,13.79 9.79,12 12,12C14.21,12 16,13.79 16,16C16,18.21 14.21,20 12,20M2,16C2,14 4,12 4,12C4,12 4,16 2,16M22,16C22,14 20,12 20,12C20,12 20,16 22,16Z"/></svg>
+            <canvas id="gameCanvas"></canvas>
+            <div id="input-display">READY</div>
         </div>
     </div>
 
     <div id="start-screen" class="overlay">
-        <div class="scroll" style="background: #1a1a2e; color: var(--wizard-gold); border-color: var(--wizard-gold);">
-            <h1>Wizard Academy</h1>
-            <input type="text" id="name-input" placeholder="Scarlett" maxlength="12">
-            <div class="mode-selector">
-                <label><input type="radio" name="lives-mode" value="999" checked> ♾️ Unlimited</label>
+        <div class="scroll">
+            <h1 style="color: var(--wizard-red); margin: 0;">Academy Syllabus</h1>
+            <p>Master the curriculum to become a Great Wizard:</p>
+            <table class="syllabus-table">
+                <tr><td><b>Year 1</b></td><td>Home Row + E, I, R, U (Single Letters)</td></tr>
+                <tr><td><b>Year 2</b></td><td>Full Top Row (Single Letters)</td></tr>
+                <tr><td><b>Year 3</b></td><td>Full Bottom Row (Single Letters)</td></tr>
+                <tr><td><b>Year 4</b></td><td>Short Spells (2-3 letters)</td></tr>
+                <tr><td><b>Year 5</b></td><td>Medium Spells (4-6 letters)</td></tr>
+                <tr><td><b>Year 6</b></td><td>Advanced Magic (Full Words)</td></tr>
+            </table>
+            <input type="text" id="name-input" placeholder="Enter Name" maxlength="12" style="width:80%; padding:10px; margin:10px; border:2px solid var(--wizard-red); border-radius:5px; text-align:center;">
+            <div style="margin: 10px 0; font-size: 0.9rem;">
+                <label><input type="radio" name="lives-mode" value="999" checked> ♾️ Practice</label>
                 <label><input type="radio" name="lives-mode" value="5"> ❤️ 5 Lives</label>
             </div>
-            <button onclick="startGame()">NEW LESSON</button>
-            <button id="load-btn-ui" class="load-btn" onclick="loadGame()" style="display:none;">CONTINUE PREVIOUS GAME</button>
-            <h3 style="margin: 15px 0 5px 0;">🏆 Hall of Fame</h3>
-            <table id="score-list-start" style="width:100%; font-size:0.8rem;"></table>
+            <button onclick="startGame()">BEGIN LESSON (Enter)</button>
         </div>
     </div>
 
     <div id="pause-screen" class="overlay" style="display: none;">
-        <div class="scroll" style="background: #1a1a2e; border: 3px solid var(--wizard-blue);">
+        <div class="scroll" style="background: #1a1a2e; border: 3px solid var(--wizard-blue); color: white;">
             <h1 style="color: var(--wizard-blue);">Magic Suspended</h1>
-            <p style="color: white;">The Time-Turner has paused the lesson.</p>
+            <p>The Time-Turner has paused the lesson.</p>
             <button onclick="togglePause()" style="background: var(--wizard-blue);">RESUME MAGIC (Esc)</button>
         </div>
     </div>
@@ -117,17 +146,15 @@
         <div class="scroll">
             <h1 id="rep-title">📜 Year Passed!</h1>
             <p id="rep-stats"></p>
-            <div id="final-stats" style="display:none;"><table id="score-list-report" style="width:100%;"></table></div>
-            <button onclick="nextYear()">NEXT YEAR (Enter)</button>
-            <button class="save-btn" onclick="saveCurrentGame()">💾 SAVE & QUIT</button>
+            <button onclick="nextYear()">ADVANCE (Enter)</button>
+            <button onclick="location.reload()" style="background:#3d3d5c; margin-top:5px;">BACK TO LOBBY</button>
         </div>
     </div>
 
     <div id="keyboard-section">
-        <div class="key-row" id="r1"></div>
-        <div class="key-row" id="r2"></div>
-        <div class="key-row" id="r3"></div>
-        <div id="watermark">Made for Scarlett, by Daddy ✨</div>
+        <div class="key-row" id="r1"><div class="row-label" id="label-r1">Top Row ➔</div></div>
+        <div class="key-row" id="r2"><div class="row-label" id="label-r2">Home Row ➔</div></div>
+        <div class="key-row" id="r3"><div class="row-label" id="label-r3">Bottom Row ➔</div></div>
     </div>
 
     <template id="snitch-svg">
@@ -135,32 +162,78 @@
     </template>
 
     <script>
-        // --- IPAD KEYBOARD FIX ---
-        document.addEventListener('touchstart', function() {
-            window.focus();
-            let hiddenInput = document.getElementById('kb-fix');
-            if (!hiddenInput) {
-                hiddenInput = document.createElement('input');
-                hiddenInput.id = 'kb-fix';
-                hiddenInput.type = 'text';
-                hiddenInput.style.position = 'fixed';
-                hiddenInput.style.opacity = '0';
-                document.body.appendChild(hiddenInput);
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration, vol) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
+        const sounds = {
+            correct: () => playTone(880, 'sine', 0.2, 0.1),
+            wrong: () => {
+                // Ribbit/Frog sound synth
+                playTone(120, 'sawtooth', 0.1, 0.1);
+                setTimeout(() => playTone(100, 'sawtooth', 0.15, 0.1), 50);
+            },
+            levelUp: () => {
+                playTone(523.25, 'sine', 0.2, 0.1);
+                setTimeout(() => playTone(659.25, 'sine', 0.2, 0.1), 100);
+                setTimeout(() => playTone(783.99, 'sine', 0.4, 0.1), 200);
             }
-            hiddenInput.focus();
-        });
-        
+        };
+
+        const YEAR_DATA = {
+            1: { 
+                keys: "ASDFGHJKLEIRU", words: false, title: "Year 1: Home Base", 
+                task: "Home Row + E, I, R, U.", 
+                tips: "Feel the little bumps on F and J? Keep your index fingers there. Let your other fingers rest lightly on the keys next to them!" 
+            },
+            2: { 
+                keys: "ASDFGHJKLEIRUQWTYOP", words: false, title: "Year 2: High Altitudes", 
+                task: "Full Top Row added.", 
+                tips: "Reach up to the Top Row with one finger at a time, then hop it right back to its home base. Try not to look at your hands!" 
+            },
+            3: { 
+                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: false, title: "Year 3: Deep Dungeons", 
+                task: "Full keyboard unlocked.", 
+                tips: "The bottom row is tricky! Use your pinky for 'Z' and your ring finger for 'X'. Keep your wrists straight like a piano player." 
+            },
+            4: { 
+                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 2, max: 3, title: "Year 4: Basic Charms", 
+                task: "Short spells (2-3 letters).", 
+                tips: "Type in a rhythm! One-two, one-two. It's easier to cast spells if your fingers dance to a steady beat." 
+            },
+            5: { 
+                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 4, max: 6, title: "Year 5: Master Spells", 
+                task: "Medium spells (4-6 letters).", 
+                tips: "Don't rush! Speed comes from accuracy. If you hit a wrong key, the frog croak is a reminder to slow down and find your home row." 
+            },
+            6: { 
+                keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", words: true, min: 7, max: 20, title: "Year 6: Ultimate Magic", 
+                task: "The final test!", 
+                tips: "You've mastered the Academy! Keep your eyes on the screen and let your fingers find the path. You are a Grand Wizard now!" 
+            }
+        };
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const seeds = ["WAND", "ROBE", "OWL", "HAT", "INK", "FLY", "CAT", "RAT", "CUP", "BOY", "MAP", "KEY", "BED", "TEA", "SUN", "BAG", "BOOK", "TOAD", "GOLD", "GATE", "FIRE", "WALL", "CAKE", "WIND", "BIRD", "SNOW", "SHIP", "MILK", "JUMP", "DARK", "FAST", "LOCK", "DOOR", "WOOD", "TREE", "SOUP", "COIN", "DUST", "DESK", "FROG", "MAGIC", "CLOAK", "TRAIN", "GHOST", "SPELL", "BRICK", "STONE", "BROOM", "STAIR", "PIZZA", "STARS", "NIGHT", "LIGHT", "GLOVE", "SNAKE", "MOUSE", "VAULT", "SCARF", "POTION", "WIZARD", "CASTLE", "DRAGON", "GOBLIN", "MIRROR", "SCHOOL", "FLOWER", "GIANTS", "DIARY", "SPIDER", "FOREST", "KNIGHT", "SILVER", "PURPLE", "SHIELD", "SPIRIT", "ARMOR", "GARDEN", "KITCHEN", "PUMPKIN", "BROOMS", "CAULDRON", "FEATHER", "LIBRARY", "WHISPER", "PHANTOM", "ALCHEMY", "CRYSTAL", "LANTERN", "SHADOW", "TOWER", "BRIDGE", "SCROLL", "BEAST", "TICKET", "CANDLE", "REMEDY", "BREW", "ELIXIR", "TALENT", "QUEST", "AMULET", "CHARM", "JINX", "HEX", "RUNE", "SIGHT", "DREAM", "FLAME", "FROST", "STORM", "CLOUD", "POWER", "CROWN", "SCEPTRE", "VALLEY", "MOUNTAIN", "ISLAND", "OCEAN", "DESERT", "JUNGLE", "CAVERN", "TUNNEL", "TEMPLE", "STATUE", "PILLAR", "THRONE", "CHAMBER", "PASSAGE", "SECRET", "RIDDLE", "PUZZLE", "SYMBOL", "LEGEND", "FABLE", "STORY", "MYTH", "REWARD", "TROPHY", "MEDAL", "BADGE", "TOKEN", "JEWEL", "DIAMOND", "RUBY", "PEARL", "EMERALD", "SAPPHIRE", "BOTTLE", "CHEST", "BASKET", "HAMMER", "CHISEL", "NEEDLE", "THREAD", "FABRIC", "LEATHER", "CANVAS", "GRIFFIN", "PHOENIX", "UNICORN", "DRAGON", "CENTAUR", "MERMAID", "PIXIE", "FAIRY", "GNOME", "TROLL", "GIANT", "GOLEM", "SPIRIT", "WRAITH", "BANSHEE", "SPECTRE", "KEEPER", "MASTER", "ELDER", "LEADER", "FRIEND", "COUSIN", "FAMILY", "SISTER", "BROTHER", "FATHER", "MOTHER"].map(w => w.toUpperCase());
 
-        const layout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
-        layout.forEach((row, i) => {
-            const container = document.getElementById(`r${i+1}`);
-            row.split("").forEach(char => {
+        const keyMap = {};
+        const layouts = [{id:'r1',chars:"QWERTYUIOP"},{id:'r2',chars:"ASDFGHJKL"},{id:'r3',chars:"ZXCVBNM"}];
+        layouts.forEach(r => {
+            const el = document.getElementById(r.id);
+            r.chars.split("").forEach(c => {
+                keyMap[c] = r.id;
                 const k = document.createElement('div');
-                k.className = 'key'; k.id = 'k-' + char; k.innerText = char;
-                container.appendChild(k);
+                k.className = 'key'; k.id = 'k-' + c; k.innerText = c;
+                el.appendChild(k);
             });
         });
 
@@ -168,90 +241,13 @@
         const snitchTemplate = document.getElementById('snitch-svg');
         for(let i=0; i<20; i++) snitchGrid.appendChild(snitchTemplate.content.cloneNode(true));
 
-        // GLOBAL STATE
-        let activeWords = [], score = 0, level = 1, typed = 0, lives = 5, active = false, reporting = false, paused = false, playerName = "Scarlett", inputStr = "", lastS = 0, targetedWord = null;
-        let fallSpeedMult = 1.0; // THE MASTER SPEED MULTIPLIER
+        let activeWords = [], score = 0, level = 1, typed = 0, lives = 5, active = false, reporting = false, paused = false, playerName = "Scarlett", inputStr = "", lastS = 0, targetedWord = null, fallSpeedMult = 1.0;
 
-        function changeSpeed(delta) {
-            fallSpeedMult += delta;
-            // Bound it between 0.4 and 3.0
-            if (fallSpeedMult < 0.4) fallSpeedMult = 0.4;
-            if (fallSpeedMult > 3.0) fallSpeedMult = 3.0;
-            
-            // Update the meter
-            document.getElementById('speed-val-display').innerText = `SPEED: ${fallSpeedMult.toFixed(1)}x`;
-            
-            // For already falling words, update their internal speed immediately
-            activeWords.forEach(w => w.updateSpeed());
-            
-            window.focus();
-        }
-
-        function saveCurrentGame() {
-            const gameState = { score, level, lives, playerName, mode: document.querySelector('input[name="lives-mode"]:checked').value };
-            localStorage.setItem('wizard_save', JSON.stringify(gameState));
-            location.reload(); 
-        }
-
-        function loadGame() {
-            const saved = localStorage.getItem('wizard_save');
-            if(!saved) return;
-            const data = JSON.parse(saved);
-            score = data.score; level = data.level; lives = data.lives; playerName = data.playerName;
-            document.getElementById('name-input').value = playerName;
-            startGame(true);
-        }
-
-        function togglePause() {
-            if (!active || reporting) return;
-            paused = !paused;
-            document.getElementById('pause-screen').style.display = paused ? 'flex' : 'none';
-            if (!paused) { lastS = performance.now(); requestAnimationFrame(loop); }
-            document.getElementById('special-snitch').style.animationPlayState = paused ? 'paused' : 'running';
-        }
-
-        function checkLoadButton() {
-            if(localStorage.getItem('wizard_save')) document.getElementById('load-btn-ui').style.display = 'block';
-        }
-
-        function getHighScores() {
-            const saved = localStorage.getItem('wizardScores');
-            return saved ? JSON.parse(saved) : [{name: "Scarlett", score: 100, year: 1}];
-        }
-
-        function saveScore() {
-            let scores = getHighScores();
-            const topScore = scores.length > 0 ? scores[0].score : 0;
-            if(score > topScore) {
-                document.getElementById('special-snitch').style.display = 'flex';
-                setTimeout(() => document.getElementById('special-snitch').style.display = 'none', 6000);
-            }
-            scores.push({name: playerName, score: score, year: level});
-            scores.sort((a, b) => b.score - a.score);
-            localStorage.setItem('wizardScores', JSON.stringify(scores.slice(0, 5)));
-            displayScores();
-        }
-
-        function displayScores() {
-            const scores = getHighScores();
-            const content = `<tr><th>Rank</th><th>Name</th><th>Yr</th><th>Score</th></tr>` + 
-                scores.map((s, i) => `<tr><td>${i+1}</td><td>${s.name}</td><td>${s.year}</td><td>${s.score}</td></tr>`).join('');
-            document.getElementById('score-list-start').innerHTML = content;
-            document.getElementById('score-list-report').innerHTML = content;
-        }
-
-        function startGame(isLoad = false) {
-            if(!isLoad) {
-                playerName = document.getElementById('name-input').value || "Scarlett";
-                lives = parseInt(document.querySelector('input[name="lives-mode"]:checked').value);
-                score = 0; level = 1;
-            }
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('report-card').style.display = 'none';
-            typed = 0; activeWords = []; inputStr = ""; active = true; reporting = false; paused = false; targetedWord = null;
-            resetSnitches(); resize(); updateUI(); requestAnimationFrame(loop);
-        }
-
+        function changeSpeed(d) { fallSpeedMult = Math.max(0.4, Math.min(3.0, fallSpeedMult + d)); document.getElementById('speed-val-display').innerText = `SPEED: ${fallSpeedMult.toFixed(1)}x`; }
+        function togglePause() { if (!active || reporting) return; paused = !paused; document.getElementById('pause-screen').style.display = paused ? 'flex' : 'none'; if (!paused) { lastS = performance.now(); requestAnimationFrame(loop); } }
+        function startGame() { if (audioCtx.state === 'suspended') audioCtx.resume(); playerName = document.getElementById('name-input').value || "Scarlett"; lives = parseInt(document.querySelector('input[name="lives-mode"]:checked').value); score = 0; level = 1; document.getElementById('start-screen').style.display = 'none'; document.getElementById('report-card').style.display = 'none'; resetGameSession(); requestAnimationFrame(loop); }
+        function resetGameSession() { typed = 0; activeWords = []; inputStr = ""; active = true; reporting = false; targetedWord = null; paused = false; updateSidebar(); resetSnitches(); resize(); updateUI(); }
+        function updateSidebar() { const d = YEAR_DATA[level] || YEAR_DATA[6]; document.getElementById('sidebar-title').innerText = d.title; document.getElementById('sidebar-task').innerText = d.task; document.getElementById('sidebar-tips').innerText = d.tips; }
         function resetSnitches() { document.querySelectorAll('.snitch').forEach(s => s.classList.remove('active')); }
         function resize() { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; }
         window.onresize = resize;
@@ -260,134 +256,80 @@
             document.getElementById('score-val').innerText = score;
             document.getElementById('lvl-val').innerText = level;
             document.getElementById('lives-display').innerText = lives > 10 ? "♾️" : "❤️".repeat(lives);
-            const snitches = document.querySelectorAll('.snitch');
-            snitches.forEach((s, i) => i < typed ? s.classList.add('active') : s.classList.remove('active'));
-            
-            document.querySelectorAll('.key').forEach(k => k.classList.remove('guide'));
-            if (targetedWord) {
-                let char = targetedWord.text[inputStr.length];
-                if (char) document.getElementById('k-' + char)?.classList.add('guide');
-            } else if (activeWords.length > 0) {
-                activeWords.forEach(w => {
-                    document.getElementById('k-' + w.text[0])?.classList.add('guide');
-                });
-            }
+            document.querySelectorAll('.snitch').forEach((s, i) => i < typed ? s.classList.add('active') : s.classList.remove('active'));
+            const allowed = YEAR_DATA[level]?.keys || "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            document.querySelectorAll('.key').forEach(k => {
+                const char = k.id.split('-')[1];
+                k.classList.remove('guide');
+                if (!allowed.includes(char)) k.classList.add('locked'); else k.classList.remove('locked');
+            });
+            if (targetedWord) { let char = targetedWord.text[inputStr.length]; if (char) document.getElementById('k-' + char)?.classList.add('guide'); }
         }
 
         class Word {
             constructor() {
-                const lengthGoal = level + 2;
-                const filtered = seeds.filter(w => level === 1 ? w.length === 3 : (level === 2 ? w.length === 4 : w.length >= lengthGoal));
-                this.text = filtered[Math.floor(Math.random() * filtered.length)] || seeds[0];
-                this.x = Math.random() * (canvas.width - 180) + 90;
-                this.y = -20;
-                this.baseSpeed = 0.2 + (level * 0.15);
-                this.updateSpeed();
-            }
-            updateSpeed() {
-                this.speed = this.baseSpeed * fallSpeedMult;
+                const config = YEAR_DATA[level] || YEAR_DATA[6];
+                this.text = !config.words ? config.keys[Math.floor(Math.random()*config.keys.length)] : (seeds.filter(w=>w.length>=config.min&&w.length<=config.max)[Math.floor(Math.random()*seeds.length)]||"MAGIC");
+                this.x = Math.random() * (canvas.width - 150) + 75; this.y = -30;
+                this.speed = (0.3 + (level * 0.1)) * fallSpeedMult;
             }
             draw() {
-                ctx.textAlign = "center";
+                ctx.textAlign = "center"; ctx.font = "bold 28px 'Courier New'";
                 if (targetedWord === this) {
-                    ctx.font = "bold 32px 'Courier New'";
-                    const typedWidth = ctx.measureText(this.text.substring(0, inputStr.length)).width;
-                    const fullWidth = ctx.measureText(this.text).width;
-                    const startX = this.x - (fullWidth/2);
-                    
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillText(this.text.substring(0, inputStr.length), startX + (typedWidth/2), this.y);
-                    ctx.fillStyle = "#ffd700";
-                    ctx.fillText(this.text.substring(inputStr.length), startX + typedWidth + (ctx.measureText(this.text.substring(inputStr.length)).width/2), this.y);
-                } else {
-                    ctx.fillStyle = "#f1d38e";
-                    ctx.font = "bold 26px 'Courier New'";
-                    ctx.fillText(this.text, this.x, this.y);
-                }
+                    const fullW = ctx.measureText(this.text).width;
+                    const typedW = ctx.measureText(this.text.substring(0, inputStr.length)).width;
+                    const startX = this.x - (fullW/2);
+                    ctx.fillStyle = "#ffffff"; ctx.fillText(this.text.substring(0, inputStr.length), startX + (typedW/2), this.y);
+                    ctx.fillStyle = "#ffd700"; ctx.fillText(this.text.substring(inputStr.length), startX + typedW + (ctx.measureText(this.text.substring(inputStr.length)).width/2), this.y);
+                } else { ctx.fillStyle = "#f1d38e"; ctx.fillText(this.text, this.x, this.y); }
             }
         }
 
         function loop(t) {
             if (!active || reporting || paused) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Spawn rate slightly affected by speed multiplier too
-            let spawnRate = (6000 - (level * 500)) / Math.sqrt(fallSpeedMult);
-            if (t - lastS > spawnRate) {
-                activeWords.push(new Word());
-                lastS = t;
-            }
+            if (t - lastS > (5000 - (level * 400)) / Math.sqrt(fallSpeedMult)) { activeWords.push(new Word()); lastS = t; }
             activeWords.forEach((w, i) => {
-                w.y += w.speed;
-                w.draw();
-                if (w.y > canvas.height) {
-                    if (targetedWord === w) { targetedWord = null; inputStr = ""; }
-                    activeWords.splice(i, 1);
-                    if (lives <= 5) { lives--; if (lives <= 0) endGame(); }
-                    updateUI();
-                }
+                w.y += w.speed; w.draw();
+                if (w.y > canvas.height) { if (targetedWord === w) { targetedWord = null; inputStr = ""; } activeWords.splice(i, 1); if (lives <= 5) { lives--; if (lives <= 0) endGame(); } updateUI(); }
             });
             requestAnimationFrame(loop);
-        }
-
-        function endGame() {
-            reporting = true; saveScore();
-            document.getElementById('rep-title').innerText = "🧙 Magic Exhausted!";
-            document.getElementById('rep-stats').innerText = `${playerName}: ${score} Points`;
-            document.getElementById('final-stats').style.display = 'block';
-            document.getElementById('report-card').style.display = 'flex';
         }
 
         function handleKey(char) {
             if (!active || reporting || paused) return;
             const c = char.toUpperCase();
+            if (!(YEAR_DATA[level]?.keys || "").includes(c)) { sounds.wrong(); return; }
             const kEl = document.getElementById('k-' + c);
-            if (kEl) { kEl.classList.add('active'); setTimeout(() => kEl.classList.remove('active'), 120); }
-
+            if (kEl) { kEl.classList.add('active'); setTimeout(() => kEl.classList.remove('active'), 100); }
+            let hit = false;
             if (!targetedWord) {
-                const matches = activeWords.filter(w => w.text.startsWith(c));
-                if (matches.length > 0) {
-                    targetedWord = matches.sort((a,b) => b.y - a.y)[0];
-                    inputStr = c;
-                }
-            } else if (c === targetedWord.text[inputStr.length]) {
-                inputStr += c;
-            }
+                const m = activeWords.filter(w => w.text.startsWith(c));
+                if (m.length > 0) { targetedWord = m.sort((a,b)=>b.y-a.y)[0]; inputStr = c; hit = true; }
+            } else if (c === targetedWord.text[inputStr.length]) { inputStr += c; hit = true; }
+            
+            if (hit) { 
+                sounds.correct(); 
+                const lbl = document.getElementById('label-' + keyMap[c]);
+                if (lbl) { lbl.classList.add('spark'); setTimeout(() => lbl.classList.remove('spark'), 250); }
+            } else sounds.wrong();
 
             if (targetedWord && inputStr === targetedWord.text) {
-                score += inputStr.length * 10;
-                typed++;
-                activeWords = activeWords.filter(w => w !== targetedWord);
-                targetedWord = null;
-                inputStr = "";
-                if (typed >= 20) {
-                    reporting = true;
-                    document.getElementById('rep-title').innerText = `📜 Year ${level} Complete!`;
-                    document.getElementById('rep-stats').innerText = `Accuracy Bonus!`;
-                    document.getElementById('final-stats').style.display = 'none';
-                    document.getElementById('report-card').style.display = 'flex';
-                }
+                score += inputStr.length * 10; typed++; activeWords = activeWords.filter(w => w !== targetedWord); targetedWord = null; inputStr = "";
+                if (typed >= 20) { reporting = true; sounds.levelUp(); document.getElementById('rep-title').innerText = `📜 Year ${level} Complete!`; document.getElementById('rep-stats').innerText = `Mastered! Total Score: ${score}`; document.getElementById('report-card').style.display = 'flex'; }
             }
-            document.getElementById('input-display').innerText = inputStr || "READY";
-            updateUI();
+            document.getElementById('input-display').innerText = inputStr || "READY"; updateUI();
         }
 
-        function nextYear() {
-            if (document.getElementById('rep-title').innerText === "🧙 Magic Exhausted!") { startGame(); return; }
-            level++; typed = 0; activeWords = []; inputStr = ""; targetedWord = null;
-            document.getElementById('report-card').style.display = 'none';
-            reporting = false; lastS = performance.now();
-            resetSnitches(); updateUI(); requestAnimationFrame(loop);
-        }
+        function nextYear() { if (document.getElementById('rep-title').innerText === "🧙 Magic Exhausted!") { startGame(); return; } if (level >= 6) { location.reload(); return; } level++; document.getElementById('report-card').style.display = 'none'; resetGameSession(); lastS = performance.now(); requestAnimationFrame(loop); }
+        function endGame() { reporting = true; sounds.wrong(); document.getElementById('rep-title').innerText = "🧙 Magic Exhausted!"; document.getElementById('rep-stats').innerText = `Final Score: ${score}. Try Year ${level} again!`; document.getElementById('report-card').style.display = 'flex'; }
 
         window.addEventListener('keydown', (e) => {
             if (e.key === "Escape") { togglePause(); return; }
             if (e.key === "Enter") { if (!active) startGame(); else if (reporting) nextYear(); return; }
-            if (e.key === "Backspace") { inputStr = ""; targetedWord = null; document.getElementById('input-display').innerText = "READY"; updateUI(); } 
+            if (e.key === "Backspace") { inputStr = ""; targetedWord = null; updateUI(); }
             else if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) { handleKey(e.key); }
         });
-
-        displayScores();
-        checkLoadButton();
     </script>
 </body>
 </html>
