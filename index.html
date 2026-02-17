@@ -374,6 +374,34 @@
             }
             if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) { handleKey(e.key); }
         });
+
+        /* --- iPad & External Keyboard Compatibility Bridge --- */
+        window.addEventListener('input', (e) => {
+            // This captures input from virtual keyboards and third-party iPad keyboards
+            // that might bypass the standard 'keydown' listener.
+            if (active && !reporting && !paused) {
+                if (e.inputType === 'insertText' && e.data) {
+                    const char = e.data.slice(-1); // Get the last typed character
+                    if (/[a-zA-Z]/.test(char)) {
+                        handleKey(char);
+                    }
+                } else if (e.inputType === 'deleteContentBackward') {
+                    // Mimic the backspace logic
+                    if (inputStr.length > 0) {
+                        inputStr = inputStr.slice(0, -1);
+                        if (inputStr.length === 0) targetedWord = null;
+                    }
+                    document.getElementById('input-display').innerText = inputStr || "READY";
+                    updateUI();
+                }
+            }
+        }, true);
+        
+        // Ensure the name input doesn't trigger game keys while typing
+        document.getElementById('name-input').addEventListener('keydown', (e) => {
+            e.stopPropagation();
+        });
+                
     </script>
 </body>
 </html>
