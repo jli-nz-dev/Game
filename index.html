@@ -401,7 +401,45 @@
         document.getElementById('name-input').addEventListener('keydown', (e) => {
             e.stopPropagation();
         });
-                
+
+
+        /* --- Global Controller for Enter, Escape, and Backspace --- */
+        window.addEventListener('keydown', (e) => {
+            // 1. Handle Pause/Resume
+            if (e.key === "Escape") { 
+                togglePause(); 
+                return; 
+            }
+        
+            // 2. Handle Game Entry and Level Advancement
+            if (e.key === "Enter") {
+                if (!active && !reporting) {
+                    // We are at the Lobby/Start Screen
+                    startGame();
+                } else if (reporting) {
+                    // We are at the Report Card screen
+                    nextYear();
+                }
+                return;
+            }
+        
+            // 3. Handle Natural Backspace (One letter at a time)
+            if (e.key === "Backspace") { 
+                if (inputStr.length > 0) {
+                    inputStr = inputStr.slice(0, -1);
+                    // If the word is now empty, un-target it so she can pick a different one
+                    if (inputStr.length === 0) targetedWord = null; 
+                }
+                document.getElementById('input-display').innerText = inputStr || "READY";
+                updateUI(); 
+                return; 
+            }
+        
+            // 4. Handle Standard Letter Typing
+            if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) { 
+                handleKey(e.key); 
+            }
+        });
     </script>
 </body>
 </html>
