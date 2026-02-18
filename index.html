@@ -399,6 +399,8 @@
         
         // Ensure the name input doesn't trigger game keys while typing
         document.getElementById('name-input').addEventListener('keydown', (e) => {
+            // If Enter is pressed while the cursor is in the name box, start the game!
+            if (e.key === "Enter") startGame(); 
             e.stopPropagation();
         });
 
